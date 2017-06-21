@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="zkB-p6-tW7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,34 +9,70 @@
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="tXr-a1-R10">
+        <scene sceneID="osQ-Jc-88K">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARSample" customModuleProvider="target" sceneMemberID="viewController">
-                    <arscnView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BrB-h1-WRS">
+                <viewController id="zkB-p6-tW7" customClass="ViewController" customModule="ARSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Bbe-Fd-32C"/>
+                        <viewControllerLayoutGuide type="bottom" id="taB-ZZ-1Bu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7an-Op-cG2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="Bpe-mv-Tvp" appends="YES" id="st1-CI-ENm"/>
-                            <outletCollection property="gestureRecognizers" destination="fZL-cW-6GP" appends="YES" id="ASx-AU-s2y"/>
-                        </connections>
-                    </arscnView>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FOc-xc-Yqp">
+                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="om4-f3-hr0" appends="YES" id="BCa-Lv-SoE"/>
+                                    <outletCollection property="gestureRecognizers" destination="3jR-Q8-9nI" appends="YES" id="Vfa-Xn-udn"/>
+                                </connections>
+                            </arscnView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRq-W9-5fn">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem systemItem="rewind" id="Wzt-rI-obe">
+                                        <connections>
+                                            <action selector="backButtonTapped:" destination="zkB-p6-tW7" id="MlJ-Nu-hfw"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="hz4-l8-b02"/>
+                                    <barButtonItem systemItem="refresh" id="5fr-mm-svW">
+                                        <connections>
+                                            <action selector="refreshButtonTapped:" destination="zkB-p6-tW7" id="aUn-Ql-qgG"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="BRq-W9-5fn" firstAttribute="top" secondItem="FOc-xc-Yqp" secondAttribute="bottom" id="12w-Of-AVl"/>
+                            <constraint firstItem="FOc-xc-Yqp" firstAttribute="top" secondItem="Bbe-Fd-32C" secondAttribute="bottom" id="Aca-Bv-ewY"/>
+                            <constraint firstItem="FOc-xc-Yqp" firstAttribute="leading" secondItem="7an-Op-cG2" secondAttribute="leading" id="BRS-9x-m7g"/>
+                            <constraint firstItem="taB-ZZ-1Bu" firstAttribute="top" secondItem="BRq-W9-5fn" secondAttribute="bottom" id="FGa-yP-mWt"/>
+                            <constraint firstItem="BRq-W9-5fn" firstAttribute="leading" secondItem="7an-Op-cG2" secondAttribute="leading" id="UVP-kw-dMU"/>
+                            <constraint firstAttribute="trailing" secondItem="FOc-xc-Yqp" secondAttribute="trailing" id="llj-kh-BTs"/>
+                            <constraint firstAttribute="trailing" secondItem="BRq-W9-5fn" secondAttribute="trailing" id="q9E-Ix-enc"/>
+                        </constraints>
+                    </view>
                     <connections>
-                        <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="sceneView" destination="FOc-xc-Yqp" id="lxX-Zu-gya"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="Bpe-mv-Tvp">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JwR-SO-0Hs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="om4-f3-hr0">
                     <connections>
-                        <action selector="sceneViewTapped:" destination="BV1-FR-VrT" id="s14-ED-OZY"/>
+                        <action selector="sceneViewTapped:" destination="zkB-p6-tW7" id="6p3-d4-GWD"/>
                     </connections>
                 </tapGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="fZL-cW-6GP">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="3jR-Q8-9nI">
                     <connections>
-                        <action selector="sceneViewLongPressed:" destination="BV1-FR-VrT" id="225-Gu-SkT"/>
+                        <action selector="sceneViewLongPressed:" destination="zkB-p6-tW7" id="Au3-3i-ouY"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="734" y="71"/>
         </scene>
     </scenes>
 </document>

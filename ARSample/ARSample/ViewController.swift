@@ -68,6 +68,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //            }
         }
         
+    }
+    
+    @IBAction func backButtonTapped(_ button: UIBarButtonItem) {
+        
+        if let lastCube = cubes.last {
+            lastCube.removeFromParentNode()
+            cubes.remove(at: cubes.count - 1)
+        }
+        
+    }
+    
+    @IBAction func refreshButtonTapped(_ button: UIBarButtonItem) {
+        
         cubes.forEach { $0.removeFromParentNode() }
         cubes.removeAll()
         
