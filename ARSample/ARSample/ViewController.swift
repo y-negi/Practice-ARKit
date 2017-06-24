@@ -10,10 +10,20 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+enum ModelName: String {
+    case cube = "箱"
+    case desk = "机"
+    case chair = "椅子"
+}
+
+class ViewController: UIViewController, ARSCNViewDelegate, SelectViewControllerDelegate {
+    
+    private static let kToSelect = "ToSelectModal"
     
     private var cubes = Array<SCNNode>()
     private var planes = Array<Plane>()
+    
+    private var selectedModel: ModelName = .cube
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -27,23 +37,61 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         guard let hitResult = results.first else { return }
         
-        // 箱を生成
-        let cube = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-        let cubeNode = SCNNode(geometry: cube)
-        cubeNode.name = "cube"
+        var node: SCNNode?
         
-        // 箱の判定を追加
-        let cubeShape = SCNPhysicsShape(geometry: cube, options: nil)
-        cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: cubeShape)
+        switch selectedModel {
+        case .cube:
+            
+            // 箱を生成
+            let cube = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            node = SCNNode(geometry: cube)
+            node?.name = "cube"
+            
+            // 箱の判定を追加
+            let cubeShape = SCNPhysicsShape(geometry: cube, options: nil)
+            node?.physicsBody = SCNPhysicsBody(type: .dynamic, shape: cubeShape)
+            
+        case .desk:
+            
+            guard let url = Bundle.main.url(forResource: "art.scnassets/desk", withExtension: "dae") else { return }
+            let sceneSource = SCNSceneSource(url: url, options: nil)
+            guard let cubeNode = sceneSource?.entryWithIdentifier("Desk", withClass: SCNNode.self) else { return }
+            
+            node = cubeNode
+            
+            node?.scale = SCNVector3(x: 0.002, y: 0.002, z: 0.002)
+            
+            let cube = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            let shape = SCNPhysicsShape(geometry: cube, options: nil)
+            node?.physicsBody = SCNPhysicsBody(type: .dynamic, shape: shape)
+            
+        case .chair:
+            
+            guard let url = Bundle.main.url(forResource: "art.scnassets/Armchair 01", withExtension: "dae") else { return }
+            let sceneSource = SCNSceneSource(url: url, options: nil)
+            guard let cubeNode = sceneSource?.entryWithIdentifier("chair", withClass: SCNNode.self) else { return }
+            
+            node = cubeNode
+            
+            node?.scale = SCNVector3(x: 0.1, y: 0.1, z: 0.1)
+            
+            let cube = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            let shape = SCNPhysicsShape(geometry: cube, options: nil)
+            node?.physicsBody = SCNPhysicsBody(type: .dynamic, shape: shape)
+            
+        }
         
-        // sceneView上のタップ座標のどこに箱を出現させるかを指定
-        cubeNode.position = SCNVector3Make(hitResult.worldTransform.columns.3.x,
+        if let unwrappedNode = node {
+            // sceneView上のタップ座標のどこに箱を出現させるかを指定
+            unwrappedNode.position = SCNVector3Make(hitResult.worldTransform.columns.3.x,
                                            hitResult.worldTransform.columns.3.y + 0.1,
                                            hitResult.worldTransform.columns.3.z)
+            
+            // ノードを追加
+            sceneView.scene.rootNode.addChildNode(unwrappedNode)
+            cubes.append(unwrappedNode)
+        }
         
-        // ノードを追加
-        sceneView.scene.rootNode.addChildNode(cubeNode)
-        cubes.append(cubeNode)
     }
     
     @IBAction func sceneViewLongPressed(_ recognizer: UILongPressGestureRecognizer) {
@@ -56,7 +104,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let results = sceneView.hitTest(tapPoint, types: .existingPlaneUsingExtent)
         
         if let anchor = results.first?.anchor,
-            let hitNode = sceneView.node(for: anchor) {
+            let hitNodes = sceneView.node(for: anchor)?.childNodes {
+            hitNodes.forEach { print($0.name) }
 //            print("root???")
 //            print(sceneView.scene.rootNode.name)
 //            print("oya")
@@ -67,7 +116,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                hitNode.runAction(SCNAction.removeFromParentNode())
 //            }
         }
-        
     }
     
     @IBAction func backButtonTapped(_ button: UIBarButtonItem) {
@@ -83,6 +131,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         cubes.forEach { $0.removeFromParentNode() }
         cubes.removeAll()
+        
+    }
+    
+    @IBAction func selectButtonTapped(_ button: UIBarButtonItem) {
+        
+        performSegue(withIdentifier: ViewController.kToSelect, sender: nil)
         
     }
     
@@ -105,10 +159,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = SCNScene()
         sceneView.scene.rootNode.name = "root"
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
@@ -121,16 +171,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.run(configuration)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
+    deinit {
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == ViewController.kToSelect) {
+            if let selectViewController = segue.destination as? SelectViewController {
+                selectViewController.delegate = self
+            }
+        }
     }
 
     // MARK: - ARSCNViewDelegate
@@ -190,4 +254,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
     }
+    
+    // MARK: - SelectViewControllerDelegate
+    
+    func didSelectModel(_ model: ModelName) {
+        selectedModel = model
+    }
+    
 }

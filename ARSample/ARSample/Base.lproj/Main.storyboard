@@ -36,10 +36,15 @@
                                             <action selector="backButtonTapped:" destination="zkB-p6-tW7" id="MlJ-Nu-hfw"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="hz4-l8-b02"/>
                                     <barButtonItem systemItem="refresh" id="5fr-mm-svW">
                                         <connections>
                                             <action selector="refreshButtonTapped:" destination="zkB-p6-tW7" id="aUn-Ql-qgG"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="hz4-l8-b02"/>
+                                    <barButtonItem systemItem="organize" id="DRc-o9-p1I">
+                                        <connections>
+                                            <action selector="selectButtonTapped:" destination="zkB-p6-tW7" id="4GW-Qx-wWj"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -58,6 +63,7 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="FOc-xc-Yqp" id="lxX-Zu-gya"/>
+                        <segue destination="pOf-Ns-9mS" kind="presentation" identifier="ToSelectModal" id="jCR-bK-TfS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JwR-SO-0Hs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -73,6 +79,53 @@
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="734" y="71"/>
+        </scene>
+        <!--Select View Controller-->
+        <scene sceneID="yVv-gP-oRg">
+            <objects>
+                <viewController id="pOf-Ns-9mS" customClass="SelectViewController" customModule="ARSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Jii-Ur-t1u"/>
+                        <viewControllerLayoutGuide type="bottom" id="ezK-1m-QWw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RyH-mU-YKF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Va2-QO-Yna">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="0Qb-9y-1Qa">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Qb-9y-1Qa" id="jv5-yb-mkQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="pOf-Ns-9mS" id="elI-Wd-URT"/>
+                                    <outlet property="delegate" destination="pOf-Ns-9mS" id="nYQ-6U-dnS"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Va2-QO-Yna" firstAttribute="top" secondItem="Jii-Ur-t1u" secondAttribute="bottom" id="7qa-lW-czR"/>
+                            <constraint firstItem="Va2-QO-Yna" firstAttribute="leading" secondItem="RyH-mU-YKF" secondAttribute="leading" id="Jd2-Yk-rDV"/>
+                            <constraint firstAttribute="trailing" secondItem="Va2-QO-Yna" secondAttribute="trailing" id="lXM-FJ-8TV"/>
+                            <constraint firstItem="ezK-1m-QWw" firstAttribute="top" secondItem="Va2-QO-Yna" secondAttribute="bottom" id="sDI-m5-FfG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="selectTableView" destination="Va2-QO-Yna" id="lwV-yO-VEp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M5f-Uf-qXb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1562" y="71"/>
         </scene>
     </scenes>
 </document>
