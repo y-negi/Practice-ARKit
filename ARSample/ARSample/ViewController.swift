@@ -25,9 +25,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SelectViewControllerD
     
     private var selectedModel: ModelName = .cube
 
-    @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet private weak var sceneView: ARSCNView!
     
-    @IBAction func sceneViewTapped(_ recognizer: UITapGestureRecognizer) {
+    @IBAction private func sceneViewTapped(_ recognizer: UITapGestureRecognizer) {
         
         // sceneView上のタップ箇所を取得
         let tapPoint = recognizer.location(in: sceneView)
@@ -94,7 +94,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SelectViewControllerD
         
     }
     
-    @IBAction func sceneViewLongPressed(_ recognizer: UILongPressGestureRecognizer) {
+    @IBAction private func sceneViewLongPressed(_ recognizer: UILongPressGestureRecognizer) {
         if recognizer.state != .began { return }
         
         // sceneView上のタップ箇所を取得
@@ -118,7 +118,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SelectViewControllerD
         }
     }
     
-    @IBAction func backButtonTapped(_ button: UIBarButtonItem) {
+    @IBAction private func backButtonTapped(_ button: UIBarButtonItem) {
         
         if let lastCube = cubes.last {
             lastCube.removeFromParentNode()
@@ -127,14 +127,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SelectViewControllerD
         
     }
     
-    @IBAction func refreshButtonTapped(_ button: UIBarButtonItem) {
+    @IBAction private func refreshButtonTapped(_ button: UIBarButtonItem) {
         
         cubes.forEach { $0.removeFromParentNode() }
         cubes.removeAll()
         
     }
     
-    @IBAction func selectButtonTapped(_ button: UIBarButtonItem) {
+    @IBAction private func selectButtonTapped(_ button: UIBarButtonItem) {
         
         performSegue(withIdentifier: ViewController.kToSelect, sender: nil)
         
