@@ -94,7 +94,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                                        y: (hitResult.worldTransform.columns.3.y + unwrappedDrawingHitResult.worldTransform.columns.3.y) / 2,
                                                        z: (hitResult.worldTransform.columns.3.z + unwrappedDrawingHitResult.worldTransform.columns.3.z) / 2)
             
-            unwrappedDrawingNode.geometry = SCNBox(width: CGFloat(0.05 + plusX),
+            
+            if let unwrappedRotation = sceneView.pointOfView?.rotation {
+                unwrappedDrawingNode.rotation = unwrappedRotation
+            }
+            
+            let movedLength = sqrt(pow(plusX, 2.0) + pow(plusY, 2.0) + pow(plusZ, 2.0))
+            
+            unwrappedDrawingNode.geometry = SCNBox(width: CGFloat(0.005 + movedLength),
                                                    height: 0.005,//CGFloat(0.05 + plusY),
                                                    length: 0.005,//CGFloat(0.05 + plusZ),
                                                    chamferRadius: 0)
@@ -110,7 +117,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             // 上みたいな感じで結構ばらけるので、とりあえず「0.01 = 1cm」とする。
             
-            var cm = (0.05 + plusX) * 1000
+            var cm = (0.005 + movedLength) * 1000
             cm = round(cm) / 10
             
             lengthLabel.text = String("\(cm)cm")
@@ -266,7 +273,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // デバッグ時用オプション
         // ARKitが感知しているところに「+」がいっぱい出てくるようになる
-        sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]//, ARSCNDebugOptions.showWorldOrigin]
         
         // Create a new scene
         //        let scene = SCNScene(named: "art.scnassets/ship.scn")!
