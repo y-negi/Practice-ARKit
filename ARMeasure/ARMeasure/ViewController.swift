@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var drawingNode: SCNNode?
     var drawingHitResult: ARHitTestResult?
+    var drawingLengthTextNode: SCNNode?
     
     var timer = Timer()
     
@@ -35,6 +36,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             drawingNode = nil
             drawingHitResult = nil
+            drawingLengthTextNode = nil
             
             return
             
@@ -52,15 +54,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                            hitResult.worldTransform.columns.3.y,
                                            hitResult.worldTransform.columns.3.z)
             
+            let text = SCNText(string: "0.0cm", extrusionDepth: 0.1)
+            text.font = UIFont.systemFont(ofSize: 1)
+            text.firstMaterial?.diffuse.contents = UIColor.black
+            let textNode = SCNNode(geometry: text)
+            textNode.position = node.position
+            textNode.scale = SCNVector3(0.015, 0.015, 0.015)
             
             if let unwrappedRotation = sceneView.pointOfView?.rotation {
                 node.rotation = unwrappedRotation
+                textNode.rotation = unwrappedRotation
             }
             
             // ノードを追加
             sceneView.scene.rootNode.addChildNode(node)
+            sceneView.scene.rootNode.addChildNode(textNode)
             drawingNode = node
             drawingHitResult = hitResult
+            drawingLengthTextNode = textNode
             
             timer = Timer.scheduledTimer(timeInterval: 0.1,
                                          target: self,
@@ -84,6 +95,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let hitResult = results.first else { return }
         
         if let unwrappedDrawingNode = drawingNode,
+            let unwrappedDrawingText = drawingLengthTextNode,
             let unwrappedDrawingHitResult = drawingHitResult {
             
             let plusX = hitResult.worldTransform.columns.3.x - unwrappedDrawingHitResult.worldTransform.columns.3.x
@@ -94,9 +106,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                                        y: (hitResult.worldTransform.columns.3.y + unwrappedDrawingHitResult.worldTransform.columns.3.y) / 2,
                                                        z: (hitResult.worldTransform.columns.3.z + unwrappedDrawingHitResult.worldTransform.columns.3.z) / 2)
             
+            unwrappedDrawingText.position = unwrappedDrawingNode.position
             
             if let unwrappedRotation = sceneView.pointOfView?.rotation {
                 unwrappedDrawingNode.rotation = unwrappedRotation
+                unwrappedDrawingText.rotation = unwrappedRotation
             }
             
             let movedLength = sqrt(pow(plusX, 2.0) + pow(plusY, 2.0) + pow(plusZ, 2.0))
@@ -121,6 +135,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             cm = round(cm) / 10
             
             lengthLabel.text = String("\(cm)cm")
+            
+            let text = SCNText(string: "\(cm)cm", extrusionDepth: 0.1)
+            text.font = UIFont.systemFont(ofSize: 1)
+            text.firstMaterial?.diffuse.contents = UIColor.black
+            unwrappedDrawingText.geometry = text
+            unwrappedDrawingText.scale = SCNVector3(0.015, 0.015, 0.015)
             
 //
 //            let indices: [Int32] = [0, 1]
